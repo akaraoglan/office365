@@ -1,0 +1,44 @@
+Sub ListeIleFiltrele_Dogru2()
+    Dim ws As Worksheet
+    Dim listeSutun As String
+    Dim filtreSutun As String
+    Dim sonSatir As Long
+    Dim sonSutun As Long
+    Dim listeDegerleri As Range
+    Dim kriterler() As String
+    Dim i As Long, deg As Range
+    Dim tabloAralik As Range
+    Dim filtreSutunNum As Long
+    
+    Set ws = ActiveSheet
+    
+    ' Kullanıcıdan sütun isimlerini al
+    listeSutun = InputBox("Filtre kriterlerinin bulunduğu sütun (örn: M):")
+    filtreSutun = InputBox("Filtre uygulanacak sütun (örn: J):")
+    
+    ' Son satırı ve sütunu bul
+    sonSatir = ws.Cells(ws.Rows.Count, filtreSutun).End(xlUp).Row
+    sonSutun = ws.Cells(1, ws.Columns.Count).End(xlToLeft).Column
+    
+    ' Tablo aralığını başlık dahil seç
+    Set tabloAralik = ws.Range(ws.Cells(1, 1), ws.Cells(sonSatir, sonSutun))
+    
+    ' Filtre sütununun tablodaki pozisyonunu bul
+    filtreSutunNum = ws.Range("A1").Resize(1, sonSutun).Find(What:=ws.Cells(1, filtreSutun).Value, LookIn:=xlValues, LookAt:=xlWhole).Column
+    
+    ' Liste değerlerini diziye aktar (başlık hariç)
+    Set listeDegerleri = ws.Range(ws.Cells(2, listeSutun), ws.Cells(ws.Cells(ws.Rows.Count, listeSutun).End(xlUp).Row, listeSutun))
+    ReDim kriterler(1 To listeDegerleri.Count)
+    
+    i = 1
+    For Each deg In listeDegerleri
+        kriterler(i) = deg.Value
+        i = i + 1
+    Next deg
+    
+    ' Filtre uygula
+    tabloAralik.AutoFilter Field:=filtreSutunNum, Criteria1:=kriterler, Operator:=xlFilterValues
+    
+    MsgBox "Filtre uygulandı!", vbInformation
+End Sub
+
