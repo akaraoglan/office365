@@ -1,0 +1,13 @@
+Sub EnUygunGenislikVeYukseklik()
+    Dim ws As Worksheet
+    Dim rng As Range
+
+    ' Aktif çalışma kitabındaki tüm çalışma sayfalarını dolaş
+    For Each ws In ActiveWorkbook.Sheets
+        ws.Activate
+
+        ' Tüm hücrelerin genişliklerini ve yüksekliklerini en uyguna getir
+        ws.Cells.EntireColumn.AutoFit
+        ws.Cells.EntireRow.AutoFit
+    Next ws
+End Sub

@@ -1,0 +1,95 @@
+Public Function MakeupANumber(xNumbers As Range, xCount As Double) ' xCount'u Double olarak değiştirin
+'updateby Extendoffice
+    Dim arrNumbers() As Double ' arrNumbers'ı Double olarak değiştirin
+    Dim arrRes() As String
+    Dim ArrTemp() As Double ' ArrTemp'i Double olarak değiştirin
+    Dim xIndex As Long
+    Dim rg As Range
+
+    MakeupANumber = ""
+
+    If xNumbers.CountLarge = 0 Then Exit Function
+    ReDim arrNumbers(xNumbers.CountLarge - 1)
+
+    xIndex = 0
+    For Each rg In xNumbers
+        If IsNumeric(rg.Value) Then
+            arrNumbers(xIndex) = CDbl(rg.Value) ' CLng yerine CDbl kullanın
+            xIndex = xIndex + 1
+        End If
+    Next rg
+    If xIndex = 0 Then Exit Function
+
+    ReDim Preserve arrNumbers(0 To xIndex - 1)
+    ReDim arrRes(0)
+
+    Call Combinations(arrNumbers, xCount, ArrTemp(), arrRes())
+    ReDim Preserve arrRes(0 To UBound(arrRes) - 1)
+    MakeupANumber = arrRes
+End Function
+
+Private Sub Combinations(Numbers() As Double, Count As Double, ArrTemp() As Double, ByRef arrRes() As String) ' Tüm veri tiplerini Double olarak değiştirin
+
+    Dim currentSum As Double, i As Long, j As Long, k As Long, num As Double, indRes As Long ' num ve currentSum'ı Double olarak değiştirin
+    Dim remainingNumbers() As Double, newCombination() As Double ' Tüm veri tiplerini Double olarak değiştirin
+
+    currentSum = 0
+    If (Not Not ArrTemp) <> 0 Then
+        For i = LBound(ArrTemp) To UBound(ArrTemp)
+            currentSum = currentSum + ArrTemp(i)
+        Next i
+    End If
+
+    ' Burada küçük bir tolerans ekleyerek ondalıklı sayılardaki olası yuvarlama hatalarını giderebilirsiniz.
+    Const tolerance As Double = 0.000001
+    If Abs(currentSum - Count) < tolerance Then
+        indRes = UBound(arrRes)
+        ReDim Preserve arrRes(0 To indRes + 1)
+
+        arrRes(indRes) = ArrTemp(0)
+        For i = LBound(ArrTemp) + 1 To UBound(ArrTemp)
+            arrRes(indRes) = arrRes(indRes) & "," & ArrTemp(i)
+        Next i
+    End If
+
+    If currentSum > Count Then Exit Sub
+    If (Not Not Numbers) = 0 Then Exit Sub
+
+    For i = 0 To UBound(Numbers)
+        Erase remainingNumbers()
+        num = Numbers(i)
+        For j = i + 1 To UBound(Numbers)
+            If (Not Not remainingNumbers) <> 0 Then
+                ReDim Preserve remainingNumbers(0 To UBound(remainingNumbers) + 1)
+            Else
+                ReDim Preserve remainingNumbers(0 To 0)
+            End If
+            remainingNumbers(UBound(remainingNumbers)) = Numbers(j)
+
+        Next j
+        Erase newCombination()
+
+        If (Not Not ArrTemp) <> 0 Then
+            For k = 0 To UBound(ArrTemp)
+                If (Not Not newCombination) <> 0 Then
+                    ReDim Preserve newCombination(0 To UBound(newCombination) + 1)
+                Else
+                    ReDim Preserve newCombination(0 To 0)
+                End If
+                newCombination(UBound(newCombination)) = ArrTemp(k)
+
+            Next k
+        End If
+
+        If (Not Not newCombination) <> 0 Then
+            ReDim Preserve newCombination(0 To UBound(newCombination) + 1)
+        Else
+            ReDim Preserve newCombination(0 To 0)
+        End If
+
+        newCombination(UBound(newCombination)) = num
+
+        Combinations remainingNumbers, Count, newCombination, arrRes
+    Next i
+
+End Sub

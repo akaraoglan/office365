@@ -1,0 +1,28 @@
+Sub CalismaKitabiniGonder()
+    Dim OutlookApp As Object
+    Dim OutlookMail As Object
+    Dim ActiveWorkbookPath As String
+    Dim ActiveWorkbookName As String
+    
+    ' Aktif çalışma kitabının yolu ve adı
+    ActiveWorkbookPath = Application.ActiveWorkbook.FullName
+    ActiveWorkbookName = Application.ActiveWorkbook.Name
+    
+    ' Outlook uygulamasını başlat
+    Set OutlookApp = CreateObject("Outlook.Application")
+    
+    ' Yeni bir e-posta oluştur
+    Set OutlookMail = OutlookApp.CreateItem(0) ' 0, MailItem tipini belirtir
+    
+    ' E-posta özelliklerini ayarla
+    With OutlookMail
+        .Subject = "Aktif Çalışma Kitabım"
+        .Body = "Merhaba, ekte Excel çalışma kitabım bulunmaktadır."
+        .Attachments.Add ActiveWorkbookPath ' Aktif çalışma kitabını ekle
+        .Display ' E-postayı görüntüle (göndermeden önce düzenlenebilir)
+    End With
+    
+    ' Nesneleri serbest bırak
+    Set OutlookMail = Nothing
+    Set OutlookApp = Nothing
+End Sub

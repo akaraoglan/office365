@@ -1,0 +1,41 @@
+Sub SayfayiXlsxOlarakGonder()
+    Dim OutlookApp As Object
+    Dim OutlookMail As Object
+    Dim TempFilePath As String
+    Dim TempFileName As String
+    Dim sheet As Worksheet
+    
+    ' Aktif sayfayı al
+    Set sheet = ActiveSheet
+    
+    ' Geçici dosya yolu ve adı oluştur
+    TempFilePath = Environ("TEMP") & "\"
+    TempFileName = TempFilePath & sheet.Name & ".xlsx"
+    
+    ' Sayfayı yeni bir dosyaya kaydet
+    sheet.Copy
+    With ActiveWorkbook
+        .SaveAs fileName:=TempFileName, FileFormat:=xlOpenXMLWorkbook
+        .Close SaveChanges:=False
+    End With
+    
+    ' Outlook uygulamasını başlat
+    Set OutlookApp = CreateObject("Outlook.Application")
+    Set OutlookMail = OutlookApp.CreateItem(0)
+    
+    ' E-postayı oluştur
+    With OutlookMail
+        .To = "" ' Alıcıyı buraya yazabilirsiniz
+        .Subject = "Excel Sayfanız"
+        .Body = "Lütfen ekteki Excel sayfasını inceleyin."
+        .Attachments.Add TempFileName ' Excel dosyasını ekle
+        .Display ' E-postayı ekranda göster
+    End With
+    
+    ' Geçici dosyayı sil
+    Kill TempFileName
+    
+    ' Nesneleri serbest bırak
+    Set OutlookMail = Nothing
+    Set OutlookApp = Nothing
+End Sub

@@ -1,0 +1,53 @@
+Public YanipSonenHücre As Range
+Public YanipSonuyor As Boolean
+Public OrijinalRenk As Long
+Public ZamanlamaZamani As Date
+
+Sub HucreYanipSon()
+    If YanipSonuyor Then
+        Call YanipSonmeyiDurdur
+    End If
+    
+    Set YanipSonenHücre = ActiveCell
+    OrijinalRenk = YanipSonenHücre.Interior.ColorIndex
+    YanipSonuyor = True
+    Call YanipSon
+End Sub
+
+Sub YanipSon()
+    If YanipSonuyor And Not YanipSonenHücre Is Nothing Then
+        If YanipSonenHücre.Interior.Color = RGB(255, 255, 0) Then
+            YanipSonenHücre.Interior.ColorIndex = OrijinalRenk
+        Else
+            YanipSonenHücre.Interior.Color = RGB(255, 255, 0)
+        End If
+        ZamanlamaZamani = Now + TimeSerial(0, 0, 1)
+        Application.OnTime ZamanlamaZamani, "YanipSon"
+    End If
+End Sub
+
+Sub YanipSonmeyiDurdur()
+    If YanipSonuyor Then
+        YanipSonuyor = False
+        On Error Resume Next
+        Application.OnTime EarliestTime:=ZamanlamaZamani, Procedure:="YanipSon", Schedule:=False
+        On Error GoTo 0
+        If Not YanipSonenHücre Is Nothing Then
+            YanipSonenHücre.Interior.ColorIndex = OrijinalRenk
+        End If
+    End If
+End Sub
+
+YUKARIDAKİ KOD PERSONAL WORKBOOK MODÜLE
+
+AŞAĞIDAKİ KOD PERSONAL WORKBOOK BU ÇALIŞMA KİTABINA
+
+
+Private Sub Workbook_SheetSelectionChange(ByVal Sh As Object, ByVal Target As Range)
+    If YanipSonuyor And Not YanipSonenHücre Is Nothing Then
+        If Target.Address <> YanipSonenHücre.Address Then
+            Call YanipSonmeyiDurdur
+        End If
+    End If
+End Sub
+

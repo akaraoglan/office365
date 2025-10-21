@@ -1,0 +1,88 @@
+Sub ImportSelectedWorkbooks()
+    Dim fd As FileDialog
+    Dim FileChosen As Integer
+    Dim fileName As Variant
+    Dim ws As Worksheet
+    Dim wbSource As Workbook
+    Dim wsSource As Worksheet
+
+    ' Dosya seçim penceresi oluştur
+    Set fd = Application.FileDialog(msoFileDialogFilePicker)
+    fd.AllowMultiSelect = True
+    fd.Title = "Import Excel Workbooks"
+    fd.Filters.Clear
+    fd.Filters.Add "Excel Files", "*.xls; *.xlsx; *.xlsm", 1
+
+    ' Kullanıcı dosya seçene kadar bekle
+    FileChosen = fd.Show
+
+    If FileChosen <> -1 Then Exit Sub
+
+    ' Seçili dosyaları döngü ile işleme
+    For Each fileName In fd.SelectedItems
+        ' Seçili dosyayı aç
+        Set wbSource = Workbooks.Open(fileName)
+        wbSource.Windows(1).Visible = False
+        
+        ' Kaynak dosyadaki her bir sayfa için
+        For Each wsSource In wbSource.Sheets
+            ' Yeni bir sayfa oluştur ve adını kaynaktaki sayfanın adı olarak ayarla
+            Set ws = ActiveWorkbook.Sheets.Add(After:=ActiveWorkbook.Sheets(ActiveWorkbook.Sheets.Count))
+            ws.Name = GetUniqueSheetName(wsSource.Name & "_" & wbSource.Name)
+            
+            ' Kaynaktaki sayfanın tüm içeriğini yeni sayfaya kopyala
+            wsSource.Cells.Copy Destination:=ws.Cells
+        Next wsSource
+        
+        ' Kaynak dosyayı kapat
+        wbSource.Close SaveChanges:=False
+    Next fileName
+
+    MsgBox "Import işlemi tamamlandı.", vbInformation
+End Sub
+
+Function CleanSheetName(Name As String) As String
+    Dim InvalidChars As Variant
+    Dim i As Integer
+
+    ' Geçersiz karakterler listesi
+    InvalidChars = Array(":", "/", "\", "?", "*", "[", "]", "-", "_", "Ç", "ç", "Ğ", "ğ", "İ", "ı", "Ö", "ö", "Ş", "ş", "Ü", "ü")
+
+    ' Geçersiz karakterleri temizle
+    For i = LBound(InvalidChars) To UBound(InvalidChars)
+        Name = Replace(Name, InvalidChars(i), "")
+    Next i
+    
+    ' Geçersiz karakterleri temizledikten sonra baştaki ve sondaki boşlukları kırp
+    CleanSheetName = Trim(Name)
+    
+    ' 31 karakterden uzun adları kısalt
+    If Len(CleanSheetName) > 31 Then
+        CleanSheetName = Left(CleanSheetName, 31)
+    End If
+End Function
+
+Function GetUniqueSheetName(baseName As String) As String
+    Dim sheetName As String
+    Dim i As Integer
+    Dim ws As Worksheet
+
+    sheetName = CleanSheetName(baseName)
+    i = 1
+
+    ' Sayfa adının benzersiz olduğundan emin ol
+    Do While SheetExists(sheetName)
+        sheetName = CleanSheetName(baseName & "_" & i)
+        i = i + 1
+    Loop
+
+    GetUniqueSheetName = sheetName
+End Function
+
+Function SheetExists(sheetName As String) As Boolean
+    Dim ws As Worksheet
+    On Error Resume Next
+    Set ws = ActiveWorkbook.Sheets(sheetName)
+    SheetExists = Not ws Is Nothing
+    On Error GoTo 0
+End Function
