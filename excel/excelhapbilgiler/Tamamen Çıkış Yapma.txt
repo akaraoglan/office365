@@ -1,0 +1,5 @@
+Private Sub cmdExit_Click()
+    ThisWorkbook.Close SaveChanges:=False
+End Sub
+
+"Kodu çalıştırmadan önce cmdExit isimli bir CommandButton Eklemeyi unutma"
