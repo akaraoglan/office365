@@ -1,0 +1,10 @@
+Sub SutunSil()
+
+Dim ws As Worksheet
+Set ws = ActiveWorkbook.Sheets("Data")
+
+ws.Columns("W:W").Delete Shift:=xlToLeft
+ws.Columns("V:V").Delete Shift:=xlToLeft
+ws.Columns("U:U").Delete Shift:=xlToLeft
+
+End Sub
