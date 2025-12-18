@@ -1,0 +1,14 @@
+Sub SatirEkleDataSayfasinda()
+    Dim ws As Worksheet
+    Dim i As Integer
+    
+    ' "Data" sayfasını belirleyin
+    Set ws = ActiveWorkbook.Sheets("Data")
+    
+    ' 26. satırdan itibaren 10 satır ekleyin
+    For i = 1 To 10
+        ws.Rows(26).Insert Shift:=xlDown
+    Next i
+End Sub
+
+'Örnekteki Makro 26. satırı 10 satır aşağıya kaydırır ve 10 satır ekler. Örneğin 1 2 3 nolu satırlar dolu ve siz 4 5 6 7 8 9 10 nolu 7 boş satır eklemek isterseniz dolu olan satırın bir altındaki boş satır numarasını yazacaksınız.
