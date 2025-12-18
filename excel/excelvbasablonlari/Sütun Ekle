@@ -1,0 +1,3 @@
+Sub SutunEkle()
+    ActiveWorkbook.Worksheets("Data").Columns("A").Insert Shift:=xlToRight
+End Sub
