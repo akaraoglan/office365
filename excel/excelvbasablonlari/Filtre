@@ -1,0 +1,16 @@
+Sub Filtrele()
+    Dim ws As Worksheet
+    Set ws = ActiveWorkbook.Sheets("Data")
+     
+    ' L sütununa filtre uygula ve sadece boş olanları getir
+    ws.Rows(1).AutoFilter Field:=12, criteria1:="="
+    
+    ' L sütununa filtre uygula ve sadece ankara olanları getir
+    ws.Rows(1).AutoFilter Field:=12, Criteria1:="Ankara"
+    
+    ' L sütununa filtre uygula ve MG0008 VE MG0007'den farklı olanları getir
+    ws.Rows(1).AutoFilter Field:=12, Criteria1:="<>MG0008", Criteria2:="<>MG0007"
+    
+     'L sütununa filtre uygula ve MG0005 MG0006 MG0008 olanları getir
+    ws.Rows(1).AutoFilter Field:=12, Criteria1:=Array("MG0005", "MG0006", "MG0008"), Operator:=xlFilterValues
+End Sub
