@@ -1,0 +1,8 @@
+Sub SutunTemizle()
+
+    Dim ws As Worksheet
+    Set ws = ActiveWorkbook.Sheets("Data")
+
+    ws.Columns("A:A").Clear 
+
+End Sub
