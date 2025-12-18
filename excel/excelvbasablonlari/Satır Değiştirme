@@ -1,0 +1,16 @@
+Sub SatirYerDegistirData()
+    ' "Data" sayfasına git
+     ActiveWorkbook.Worksheets("Data").Select
+    
+    ' 1. satır ile 2. satırın yerini değiştir
+    Rows(1).Cut
+    Rows(2).Insert Shift:=xlDown
+    Rows(2).Cut
+    Rows(1).Insert Shift:=xlDown
+End Sub
+
+
+
+
+
+
