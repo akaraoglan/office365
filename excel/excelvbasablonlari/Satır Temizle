@@ -1,0 +1,12 @@
+Sub SatirTemizle()
+
+    Dim ws As Worksheet
+    Set ws = ActiveWorkbook.Sheets("Data")
+
+    ws.Rows(5).Clear ' 5. satırdaki tüm veriyi temizler
+
+End Sub
+
+
+
+
