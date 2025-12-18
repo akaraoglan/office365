@@ -1,0 +1,15 @@
+Sub SutunYerDegistirData()
+    ' "Data" sayfasına git
+    ActiveWorkbook.Worksheets("Data").Select
+    
+    ' A sütunu ile B sütununun yerini değiştir
+    Columns("A:A").Cut
+    Columns("B:B").Insert Shift:=xlToRight
+    Columns("B:B").Cut
+    Columns("A:A").Insert Shift:=xlToRight
+End Sub
+
+
+
+
+
