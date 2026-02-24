@@ -1,0 +1,9 @@
+Sub VeryHiddenSayfayiSil()
+    Dim ws As Worksheet
+    For Each ws In ThisWorkbook.Worksheets
+        If ws.Visible = xlSheetVeryHidden Then
+            ws.Visible = xlSheetVisible
+            ws.Delete
+        End If
+    Next ws
+End Sub
